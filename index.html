@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى أميرتي ❤️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b090a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* خلفية النجوم المتحركة */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        /* تأثير الكتابة */
+        .typing-text {
+            font-size: 24px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            min-height: 80px;
+            color: #f5f3f4;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* الزرار الفاجر */
+        .magic-btn {
+            background: linear-gradient(45deg, #e5383b, #f15bb5);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(229, 56, 59, 0.6);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .magic-btn.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .magic-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 35px rgba(241, 91, 181, 0.9);
+        }
+
+        /* الشاشة الثانية اللي فيها المفاجأة */
+        .surprise-box {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .surprise-box.reveal {
+            display: block;
+            opacity: 1;
+        }
+
+        .main-card {
+            background: rgba(22, 22, 26, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 36px;
+            background: linear-gradient(45deg, #ff4d6d, #ffb3c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        p.love-letter {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #d3d3d3;
+        }
+
+        /* أنيميشن الطفو للكارت */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <!-- المرحلة الأولى: التمهيد -->
+    <div class="container" id="stage1">
+        <div class="typing-text" id="typewriter"></div>
+        <button class="magic-btn" id="actionBtn" onclick="revealSurprise()">اضغطي هنا للأهم.. ❤️</button>
+    </div>
+
+    <!-- المرحلة الثانية: الانبهار -->
+    <div class="container surprise-box" id="stage2">
+        <div class="main-card">
+            <h1>كل حتة فيا بتعزك.. ✨</h1>
+            <p class="love-letter">
+                من غير صور ومن غير كلام كتير ملوش لازمة، حبيت أكتبلك كود مخصوص عشان أقولك إنك أحلى حاجة حصلت في حياتي. وجودك بيخلي كل حاجة صعبة سهلة، وبدعي ربنا يخليكي ليا دايماً وميحرمنيش من ضحكتك اللي بتنور دنيتي. 💖
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // تأثير الكتابة التلقائية
+        const text = "في كلام كتير في قلبي بس مش عارف أرتبه.. بس الأكيد، إن وجودك في حياتي هو أحلى وأجمل صدفة..";
+        let index = 0;
+        const typewriterElement = document.getElementById('typewriter');
+        const actionBtn = document.getElementById('actionBtn');
+
+        function type() {
+            if (index < text.length) {
+                typewriterElement.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(type, 70); // سرعة الكتابة
+            } else {
+                // إظهار الزرار بعد انتهاء الكتابة
+                actionBtn.classList.add('show');
+            }
+        }
+
+        // تشغيل الكتابة أول ما الصفحة تفتح
+        window.onload = type;
+
+        // الانتقال للمرحلة الثانية وتشغيل قلوب الـ Canvas
+        function revealSurprise() {
+            document.getElementById('stage1').style.display = 'none';
+            const stage2 = document.getElementById('stage2');
+            stage2.classList.add('reveal');
+            
+            // تشغيل تأثير القلوب المتفجرة
+            initHearts();
+        }
+
+        // كود الـ Canvas للقلوب المتطايرة (تأثير تفاعلي فاجر)
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+
+        class HeartParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 15 + 5;
+                this.speedY = Math.random() * 2 + 1;
+                this.speedX = Math.sin(Math.random() * 2) * 1;
+                this.opacity = Math.random() * 0.6 + 0.4;
+                this.color = `hsl(${Math.random() * 30 + 340}, 100%, 65%)`; // درجات البينك والأحمر
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.opacity > 0.01) this.opacity -= 0.002;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                // رسم قلب بالمعادلات الرياضية عشان يطلع مظبوط وجرافيك عالي
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y - this.size / 2, this.x - this.size, this.y + this.size / 3, this.x, this.y + this.size * 1.2);
+                ctx.bezierCurveTo(this.x + this.size, this.y + this.size / 3, this.x + this.size / 2, this.y - this.size / 2, this.x, this.y);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initHearts() {
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // إضافة قلب جديد في كل فريم
+                if (particles.length < 100) {
+                    particles.push(new HeartParticle());
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+
+                    // حذف القلوب اللي اختفت أو طلعت بره الشاشة
+                    if (particles[i].y < -20 || particles[i].opacity <= 0) {
+                        particles.splice(i, 1);
+                        i--;
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // إعادة ضبط الحجم لو شاش الموبايل لفت
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
